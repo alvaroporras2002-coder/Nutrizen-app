@@ -1,0 +1,842 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#8f9f7e" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="NutriZen" />
+  <title>NutriZen by Allison</title>
+  <style>
+    :root{
+      --bg:#f4f0eb;
+      --hero:#9aaa88;
+      --hero2:#859573;
+      --panel:#fffdf9;
+      --panel2:#f8f4ee;
+      --card:#ffffff;
+      --text:#273529;
+      --muted:#7a8174;
+      --line:#e4ded4;
+      --sage:#8f9f7e;
+      --sage2:#dce6d2;
+      --pink:#e8b4b8;
+      --pink2:#f9e6e8;
+      --cream:#fbf7ef;
+      --gold:#d9b56f;
+      --green:#6f8c62;
+      --red:#c86f6f;
+      --blue:#8ba9b2;
+      --shadow:0 18px 45px rgba(72,62,50,.10);
+      --radius:22px;
+      --ease:cubic-bezier(.16,1,.3,1);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}
+    button,input,select,textarea{font:inherit}
+    button{cursor:pointer}
+    a{color:inherit}
+    body[data-theme="citrus"]{
+      --bg:#fff8e7;--hero:#f6b75d;--hero2:#d89a3b;--panel:#fffef8;--panel2:#fff4d8;--text:#382a17;--muted:#7c6141;--line:#efd9a8;--sage:#7c9a4a;--sage2:#e7f0c6;--pink:#f39b7c;--pink2:#ffe1d4;--gold:#f0ad3d;--green:#749b46;--blue:#7db8b2;
+    }
+    body[data-theme="berry"]{
+      --bg:#fff4f7;--hero:#b07a8d;--hero2:#875b70;--panel:#fffafd;--panel2:#fbe9ef;--text:#3a2029;--muted:#7d6170;--line:#edd0da;--sage:#8c9870;--sage2:#e9edd9;--pink:#d87998;--pink2:#f9d9e4;--gold:#d7a85e;--green:#7a9b6d;--blue:#899eb8;
+    }
+    body[data-theme="forest"]{
+      --bg:#eef4ec;--hero:#64795b;--hero2:#506549;--panel:#fbfff9;--panel2:#edf6e9;--text:#18311f;--muted:#5f765f;--line:#d5e2d1;--sage:#6b875d;--sage2:#dbe9d4;--pink:#d9a7a5;--pink2:#f4dedc;--gold:#c6a45f;--green:#4f7f49;--blue:#6f9994;
+    }
+    body[data-motion="minimal"] *{animation-duration:.001ms!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+    .app{min-height:100vh}
+    .hero{
+      position:relative;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(255,255,255,.18), transparent 28%),
+        linear-gradient(135deg,var(--hero),var(--hero2));
+      color:#fff;
+      padding:24px 22px 56px;
+    }
+    .hero::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at 78% 30%, rgba(255,255,255,.14), transparent 28%),
+        linear-gradient(120deg, transparent 0 66%, rgba(255,255,255,.08) 67% 69%, transparent 70%);
+      pointer-events:none;
+    }
+    .hero-inner{position:relative;z-index:1;max-width:1180px;margin:0 auto;display:flex;justify-content:space-between;gap:24px;align-items:flex-start}
+    .brand-kicker{display:inline-flex;gap:7px;align-items:center;background:rgba(255,255,255,.20);border:1px solid rgba(255,255,255,.24);border-radius:999px;padding:5px 10px;font-size:12px;font-weight:900;letter-spacing:.04em;text-transform:uppercase}
+    .brand h1{margin:10px 0 0;font-size:31px;line-height:1;letter-spacing:-.06em;text-shadow:0 2px 18px rgba(0,0,0,.12)}
+    .brand h1 em{font-family:Georgia,serif;font-weight:500;color:#ffd3d8}
+    .brand p{max-width:650px;margin:9px 0 0;font-size:14px;line-height:1.45;color:rgba(255,255,255,.92)}
+    .hero-stats{display:flex;gap:0;border:1px solid rgba(255,255,255,.24);border-radius:16px;background:rgba(255,255,255,.14);backdrop-filter:blur(8px);overflow:hidden}
+    .hero-stat{padding:13px 18px;min-width:140px;text-align:center}
+    .hero-stat+ .hero-stat{border-left:1px solid rgba(255,255,255,.22)}
+    .hero-stat .k{font-size:11px;text-transform:uppercase;letter-spacing:.07em;font-weight:900;color:rgba(255,255,255,.82)}
+    .hero-stat .v{font-size:23px;font-weight:950;margin-top:6px;color:#fff}
+    .hero-stat .v.pink{color:#ffd0d6}
+    .shell{max-width:1180px;margin:-34px auto 80px;padding:0 18px;position:relative;z-index:3}
+    .navbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+    .nav-btn{border:1px solid rgba(255,255,255,.60);background:rgba(255,255,255,.72);box-shadow:0 12px 28px rgba(80,68,55,.10);border-radius:999px;padding:9px 13px;color:var(--muted);font-weight:900;font-size:12px}
+    .nav-btn.active,.nav-btn:hover{background:var(--panel);color:var(--text);border-color:var(--line);transform:translateY(-1px)}
+    .nav-spacer{flex:1}
+    .nav-compact{display:flex;gap:8px;align-items:center}
+    .select-mini{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:8px 10px;color:var(--muted);font-weight:800;font-size:12px}
+    .page{display:none}
+    .page.active{display:block;animation:pageIn .36s var(--ease) both}
+    .grid{display:grid;gap:16px}
+    .grid.metrics{grid-template-columns:1fr 1fr 1.5fr}
+    .grid.two{grid-template-columns:1.05fr .95fr}
+    .grid.three{grid-template-columns:repeat(3,1fr)}
+    .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;animation:panelIn .48s var(--ease) both}
+    .panel:nth-child(2){animation-delay:.04s}.panel:nth-child(3){animation-delay:.08s}
+    .section-title{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:14px}
+    .section-title h2,.section-title h3{margin:0;letter-spacing:-.03em}
+    .section-title h2{font-size:22px}
+    .section-title h3{font-size:15px}
+    .section-title p,.hint{margin:4px 0 0;color:var(--muted);font-size:12px;line-height:1.45}
+    .icon-badge{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:var(--sage2);color:var(--green);font-weight:950}
+    .metric-card{min-height:214px}
+    .circular{height:116px;border-radius:15px;background:var(--panel2);display:grid;place-items:center;margin:10px 0 18px}
+    .ring{--p:0;width:86px;height:86px;border-radius:50%;background:conic-gradient(var(--sage) calc(var(--p)*1%), #e8e3dc 0);display:grid;place-items:center;position:relative}
+    .ring::before{content:"";position:absolute;inset:9px;border-radius:50%;background:var(--panel)}
+    .ring-content{position:relative;text-align:center}
+    .ring-content strong{display:block;font-size:22px;line-height:1}
+    .ring-content span{display:block;font-size:10px;font-weight:900;color:var(--pink);margin-top:4px}
+    .progress{height:18px;border-radius:999px;background:#ecebe8;overflow:hidden;border:1px solid #e4e0dc}
+    .progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--sage),var(--pink));border-radius:999px;transition:width .7s var(--ease)}
+    .stat-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;padding-top:12px;border-top:1px solid var(--line)}
+    .stat-box{background:var(--panel2);border-radius:8px;padding:8px;text-align:center}
+    .stat-box .label{font-size:10px;color:var(--muted)}
+    .stat-box .value{font-size:15px;font-weight:950;margin-top:3px}
+    .btn{border:1px solid var(--line);background:var(--panel2);border-radius:12px;padding:10px 12px;font-weight:900;color:var(--text);display:inline-flex;align-items:center;justify-content:center;gap:7px;text-decoration:none}
+    .btn:hover{transform:translateY(-1px);filter:brightness(1.02)}
+    .btn.primary{background:var(--sage);border-color:var(--sage);color:#fff}
+    .btn.pink{background:var(--pink);border-color:var(--pink);color:#fff}
+    .btn.ghost{background:transparent}
+    .btn.danger{background:#fff1f1;border-color:#e8b5b5;color:#a94e4e}
+    .btn.small{padding:6px 8px;font-size:11px;border-radius:9px}
+    .actions{display:flex;gap:8px;flex-wrap:wrap}
+    .field{display:grid;gap:6px}
+    .field label{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:900}
+    input,select,textarea{width:100%;border:1px solid var(--line);background:#fff;border-radius:12px;padding:11px 12px;color:var(--text);outline:none}
+    textarea{resize:vertical;min-height:72px}
+    input:focus,select:focus,textarea:focus{border-color:var(--sage);box-shadow:0 0 0 4px color-mix(in srgb,var(--sage) 16%, transparent)}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .channels{display:grid;gap:12px}
+    .channel-row{display:grid;grid-template-columns:120px 1fr 70px;gap:10px;align-items:center;font-size:12px}
+    .channel-name{font-weight:850}
+    .channel-val{text-align:right;font-weight:900}
+    .calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+    .day-name{font-size:10px;text-align:center;font-weight:950;color:var(--muted);padding:5px;text-transform:uppercase}
+    .day-cell{min-height:68px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:7px;cursor:pointer;transition:transform .16s var(--ease),border-color .16s}
+    .day-cell:hover{transform:translateY(-2px);border-color:var(--sage)}
+    .day-cell.other{opacity:.35}
+    .day-cell.selected{outline:2px solid var(--pink);border-color:var(--pink)}
+    .day-num{font-size:11px;font-weight:950}
+    .day-mini{font-size:10px;color:var(--muted);margin-top:5px;line-height:1.25}
+    .selected-day{margin-top:12px;background:var(--panel2);border:1px dashed var(--line);border-radius:14px;padding:12px}
+    .slot-list{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
+    .slot{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 9px;font-size:11px;font-weight:900}
+    .slot.booked{background:var(--pink2);border-color:var(--pink);color:#9b5960}
+    .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:18px;background:#fff}
+    table{width:100%;border-collapse:collapse;min-width:980px}
+    th,td{padding:12px;border-bottom:1px solid var(--line);text-align:left;font-size:12px;vertical-align:top}
+    th{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--panel2);position:sticky;top:0;z-index:1}
+    tr:hover td{background:#fffaf5}
+    .pill{display:inline-flex;align-items:center;border-radius:999px;padding:4px 8px;font-size:10px;font-weight:950;border:1px solid var(--line);background:var(--panel2);white-space:nowrap}
+    .pill.green{background:#edf6e9;color:#4f7f49;border-color:#cfe0c8}
+    .pill.pink{background:var(--pink2);color:#9b5960;border-color:var(--pink)}
+    .pill.gold{background:#fff5d9;color:#8c6a21;border-color:#e9cd7a}
+    .pill.blue{background:#eaf4f6;color:#527982;border-color:#c9dfe4}
+    .status-select{min-width:140px;padding:7px 8px;border-radius:9px}
+    .report-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    .report-card{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:12px}
+    .report-card .k{font-size:10px;font-weight:950;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+    .report-card .v{font-size:22px;font-weight:950;margin-top:6px}
+    .empty{color:var(--muted);font-size:12px;padding:10px}
+    .drawer-backdrop{position:fixed;inset:0;background:rgba(40,35,28,.28);z-index:90;display:none;animation:fadeIn .2s}
+    .drawer-backdrop.show{display:block}
+    .drawer{position:fixed;right:18px;top:18px;bottom:18px;width:min(520px,calc(100vw - 36px));background:var(--panel);border:1px solid var(--line);border-radius:22px;box-shadow:0 28px 80px rgba(48,42,32,.24);z-index:100;padding:18px;overflow:auto;transform:translateX(24px);opacity:0;pointer-events:none;transition:transform .25s var(--ease),opacity .25s}
+    .drawer.show{transform:translateX(0);opacity:1;pointer-events:auto}
+    .command-backdrop{position:fixed;inset:0;background:rgba(40,35,28,.28);z-index:120;display:none}
+    .command-backdrop.show{display:block}
+    .command{position:fixed;left:50%;top:10vh;transform:translateX(-50%) translateY(-12px) scale(.98);width:min(680px,calc(100vw - 32px));background:var(--panel);border:1px solid var(--line);border-radius:22px;z-index:130;box-shadow:0 30px 90px rgba(48,42,32,.28);padding:12px;display:none;opacity:0}
+    .command.show{display:block;animation:commandIn .24s var(--ease) forwards}
+    .command input{font-size:18px;border-radius:15px}
+    .command-results{display:grid;gap:7px;margin-top:10px}
+    .command-item{border:1px solid var(--line);background:var(--panel2);border-radius:13px;padding:10px;display:flex;justify-content:space-between;gap:12px;cursor:pointer;font-weight:900}
+    .toast{position:fixed;right:18px;bottom:18px;background:var(--text);color:#fff;border-radius:16px;padding:12px 14px;box-shadow:0 16px 40px rgba(0,0,0,.20);z-index:200;display:none;font-size:13px}
+    .toast.show{display:block;animation:toastIn 2.8s var(--ease) forwards}
+    .mascot{position:fixed;right:22px;bottom:20px;z-index:170;width:118px;height:166px;cursor:pointer;user-select:none}
+    .mascot-char{position:absolute;inset:0;display:grid;place-items:end center;animation:giraffeIdle 4.2s ease-in-out infinite;filter:drop-shadow(0 18px 16px rgba(62,50,35,.22))}
+    .mascot svg{width:112px;height:160px;overflow:visible}
+    .mascot-bubble{position:absolute;right:106px;bottom:92px;width:290px;background:var(--panel);border:1px solid var(--line);border-radius:18px 18px 6px 18px;padding:12px;box-shadow:var(--shadow);opacity:0;transform:translateY(8px) scale(.96);pointer-events:none;transition:.18s var(--ease)}
+    .mascot-bubble.show{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
+    .mascot-title{font-size:12px;font-weight:950;letter-spacing:.06em;text-transform:uppercase;display:flex;justify-content:space-between}
+    .mascot-msg{font-size:12px;color:var(--muted);line-height:1.45;margin-top:7px}
+    .mascot-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
+    .mascot-actions button{border:1px solid var(--line);background:var(--panel2);border-radius:10px;padding:7px;font-size:11px;font-weight:900}
+    .mascot.minimized{width:52px;height:52px}
+    .mascot.minimized .mascot-char,.mascot.minimized .mascot-bubble{display:none}
+    .mascot.minimized::before{content:"🦒";display:grid;place-items:center;position:absolute;inset:0;border-radius:999px;background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow);font-size:24px}
+    .focus-mode .hero{padding-bottom:28px}
+    .focus-mode .hero p,.focus-mode .navbar .nav-compact,.focus-mode .metric-card,.focus-mode #channelsPanel{display:none}
+    .focus-mode .shell{margin-top:-24px}
+    @keyframes pageIn{from{opacity:0;transform:translateY(14px);filter:blur(5px)}to{opacity:1;transform:translateY(0);filter:blur(0)}}
+    @keyframes panelIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    @keyframes commandIn{to{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}}
+    @keyframes toastIn{0%{opacity:0;transform:translateY(12px)}12%,80%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(12px)}}
+    @keyframes giraffeIdle{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-7px) rotate(1.5deg)}}
+    @media(max-width:900px){
+      .hero-inner,.grid.metrics,.grid.two,.grid.three,.report-grid,.form-grid{grid-template-columns:1fr;display:grid}
+      .hero-stats{width:100%}
+      .navbar{position:sticky;top:0;z-index:30;background:rgba(244,240,235,.88);backdrop-filter:blur(8px);padding:8px;border-radius:14px}
+      .mascot{width:86px;height:122px;right:14px;bottom:14px}
+      .mascot svg{width:82px;height:118px}
+      .mascot-bubble{right:0;bottom:120px;width:calc(100vw - 28px)}
+    }
+  </style>
+</head>
+<body data-theme="sage" data-motion="smooth">
+<div class="app">
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="brand">
+        <div class="brand-kicker">🇨🇷 Costa Rica · Clínica & Bienestar Integral</div>
+        <h1>NutriZen <em>by Allison</em></h1>
+        <p>Plataforma interactiva para gestión de leads, pacientes, agenda de disponibilidad, contenido mensual y seguimiento nutricional.</p>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="k">Tasa de conversión</div><div class="v pink" id="heroConversion">0.0%</div></div>
+        <div class="hero-stat"><div class="k">Pacientes totales</div><div class="v" id="heroPatients">0</div></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <nav class="navbar">
+      <button class="nav-btn active" data-view="dashboard">Dashboard</button>
+      <button class="nav-btn" data-view="crm">CRM Pacientes</button>
+      <button class="nav-btn" data-view="agenda">Agenda</button>
+      <button class="nav-btn" data-view="reportes">Reportes</button>
+      <button class="nav-btn" data-view="ajustes">Ajustes</button>
+      <button class="nav-btn" data-view="marketing">Marketing IA</button>
+      <span class="nav-spacer"></span>
+      <div class="nav-compact">
+        <button class="btn primary small" data-action="openLeadDrawer">+ Nuevo Lead</button>
+        <button class="btn small" data-action="openCommand">⌘ Buscar</button>
+        <button class="btn small" data-action="toggleFocus">Focus</button>
+        <select id="themeSelect" class="select-mini">
+          <option value="sage">Sage</option><option value="citrus">Citrus</option><option value="berry">Berry</option><option value="forest">Forest</option>
+        </select>
+        <select id="motionSelect" class="select-mini">
+          <option value="minimal">Minimal</option><option value="smooth">Smooth</option><option value="full">Full</option>
+        </select>
+      </div>
+    </nav>
+
+    <section class="page active" id="view-dashboard">
+      <div class="grid metrics">
+        <div class="panel metric-card">
+          <div class="section-title"><div><p class="hint">Crecimiento orgánico</p><h3>Seguidores</h3><p>Progreso global de comunidad</p></div><div class="icon-badge">♡</div></div>
+          <div class="circular"><div class="ring" id="followersRing"><div class="ring-content"><strong id="followersValue">0</strong><span id="followersMeta">0% Meta</span></div></div></div>
+          <div class="actions"><button class="btn small" data-action="followersMinus">-1</button><button class="btn primary small" data-action="followersPlus">+1 Seguidor</button><button class="btn small" data-action="editGoals">Editar metas</button></div>
+          <div class="stat-row"><div class="stat-box"><div class="label">Actual</div><div class="value" id="followersCurrent">0</div></div><div class="stat-box"><div class="label">Objetivo</div><div class="value" id="followersGoal">15</div></div></div>
+        </div>
+
+        <div class="panel metric-card">
+          <div class="section-title"><div><p class="hint">Frecuencia mensual</p><h3>Publicaciones</h3><p>Contenido mensual programado</p></div><div class="icon-badge">▣</div></div>
+          <div style="background:var(--panel2);border-radius:15px;padding:24px 18px;margin:10px 0 18px">
+            <div class="progress"><span id="postsProgress"></span></div>
+            <div class="section-title" style="margin:7px 0 0"><span class="hint" id="postsCountLabel">0 publicados</span><span class="hint" id="postsGoalLabel">Meta: 7</span></div>
+          </div>
+          <div class="actions"><button class="btn primary small" data-action="addPost">+ Publicación hoy</button><button class="btn small" data-action="undoPost">Deshacer</button></div>
+          <div class="stat-row"><div class="stat-box"><div class="label">Actual</div><div class="value" id="postsCurrent">0</div></div><div class="stat-box"><div class="label">Objetivo</div><div class="value" id="postsGoal">7</div></div></div>
+        </div>
+
+        <div class="panel" id="agendaPreviewPanel">
+          <div class="section-title"><div><h3>Agenda de disponibilidad</h3><p>Vista rápida de citas agendadas</p></div><div class="actions"><button class="btn small" data-action="prevMonth">‹</button><button class="btn small" id="monthLabel">Mes</button><button class="btn small" data-action="nextMonth">›</button></div></div>
+          <div class="calendar" id="miniCalendar"></div>
+          <div class="selected-day">
+            <div class="section-title" style="margin-bottom:6px"><h3 id="selectedDayTitle">Día seleccionado</h3><button class="btn primary small" data-action="openAgenda">Reservar Cita</button></div>
+            <div id="selectedDaySummary" class="hint">Selecciona un día para ver disponibilidad.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid two" style="margin-top:16px">
+        <div class="panel" id="channelsPanel">
+          <div class="section-title"><div><p class="hint">Canales de adquisición</p><h3>Orígenes de pacientes</h3><p>Estadística de contacto inicial</p></div><div class="icon-badge">⌁</div></div>
+          <div class="channels" id="channelStats"></div>
+        </div>
+        <div class="panel">
+          <div class="section-title"><div><h3>Próximas tareas</h3><p>Leads que necesitan seguimiento</p></div><button class="btn small" data-action="nextFollowup">Siguiente</button></div>
+          <div class="channels" id="taskList"></div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:16px">
+        <div class="section-title"><div><h2>Control de Leads y Pacientes CRM</h2><p>Visualiza, edita y administra tus leads clínicos y de nutrición.</p></div><div class="actions"><button class="btn primary" data-action="openLeadDrawer">+ Nuevo Lead</button><button class="btn" data-action="exportCSV">Exportar CSV</button></div></div>
+        <div class="actions" style="margin-bottom:12px">
+          <input id="searchLeads" placeholder="Buscar por nombre o notas..." style="max-width:360px"/>
+          <select id="filterSource" style="max-width:210px"><option value="">Todos los Orígenes</option></select>
+          <select id="filterStatus" style="max-width:210px"><option value="">Todos los Estados</option></select>
+        </div>
+        <div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Paciente</th><th>Origen</th><th>Interés</th><th>Estado CRM</th><th>Cita</th><th>Notas / Diagnóstico</th><th>Acciones</th></tr></thead><tbody id="leadRows"></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="page" id="view-crm">
+      <div class="panel">
+        <div class="section-title"><div><h2>CRM de Leads y Pacientes</h2><p>Administra estado, diagnóstico, próxima acción y agendamiento.</p></div><button class="btn primary" data-action="openLeadDrawer">+ Nuevo Lead</button></div>
+        <div class="actions" style="margin-bottom:12px">
+          <input id="searchLeads2" placeholder="Buscar paciente, teléfono, notas..." style="max-width:380px"/>
+          <select id="filterSource2" style="max-width:210px"><option value="">Todos los Orígenes</option></select>
+          <select id="filterStatus2" style="max-width:210px"><option value="">Todos los Estados</option></select>
+          <button class="btn" data-action="clearFilters">Limpiar</button>
+        </div>
+        <div class="table-wrap"><table><thead><tr><th>Contacto</th><th>Paciente</th><th>Teléfono</th><th>Origen</th><th>Interés</th><th>Estado</th><th>Plan</th><th>Notas</th><th>Acciones</th></tr></thead><tbody id="leadRowsFull"></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="page" id="view-agenda">
+      <div class="grid two">
+        <div class="panel">
+          <div class="section-title"><div><h2>Agenda de Citas</h2><p>Selecciona días, agrega disponibilidad y agenda pacientes.</p></div><div class="actions"><button class="btn small" data-action="prevMonth">‹</button><button class="btn small" id="monthLabel2">Mes</button><button class="btn small" data-action="nextMonth">›</button></div></div>
+          <div class="calendar" id="agendaCalendar"></div>
+        </div>
+        <div class="panel">
+          <div class="section-title"><div><h3 id="agendaSelectedTitle">Día seleccionado</h3><p id="agendaSelectedHint">Horario disponible</p></div><button class="btn primary small" data-action="today">Hoy</button></div>
+          <div class="field"><label>Agregar horario disponible</label><div class="actions"><input type="time" id="newSlot" value="09:00" style="max-width:160px"/><button class="btn primary" data-action="addSlot">Agregar horario</button></div></div>
+          <div class="slot-list" id="slotList"></div>
+          <hr style="border:0;border-top:1px solid var(--line);margin:16px 0"/>
+          <div class="form-grid">
+            <div class="field"><label>Paciente / Lead</label><select id="appointmentLead"></select></div>
+            <div class="field"><label>Horario</label><select id="appointmentSlot"></select></div>
+            <div class="field" style="grid-column:1/-1"><label>Motivo</label><input id="appointmentReason" placeholder="Consulta inicial, seguimiento, plan nutricional..."/></div>
+          </div>
+          <div class="actions" style="margin-top:12px"><button class="btn primary" data-action="bookAppointment">Reservar Cita</button><button class="btn" data-action="openLeadDrawer">Crear Lead</button></div>
+          <div class="selected-day" id="dayAppointments"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="view-reportes">
+      <div class="panel">
+        <div class="section-title"><div><h2>Reportes</h2><p>Resumen operativo de leads, pacientes y citas.</p></div><div class="actions"><button class="btn primary" data-action="downloadDailyReport">Reporte Diario TXT</button><button class="btn" data-action="exportCSV">Leads CSV</button></div></div>
+        <div class="report-grid" id="reportGrid"></div>
+      </div>
+      <div class="panel">
+        <div class="section-title"><h3>Actividad reciente</h3><span class="hint">Últimos leads y citas registradas</span></div>
+        <div class="channels" id="recentActivity"></div>
+      </div>
+    </section>
+
+    <section class="page" id="view-ajustes">
+      <div class="grid two">
+        <div class="panel">
+          <div class="section-title"><div><h2>Ajustes de metas</h2><p>Personaliza metas mensuales y experiencia visual.</p></div></div>
+          <div class="form-grid">
+            <div class="field"><label>Meta Seguidores</label><input type="number" id="goalFollowers"/></div>
+            <div class="field"><label>Meta Publicaciones</label><input type="number" id="goalPosts"/></div>
+            <div class="field"><label>Nombre clínica</label><input id="clinicName"/></div>
+            <div class="field"><label>Especialidad</label><input id="clinicSpecialty"/></div>
+          </div>
+          <div class="actions" style="margin-top:12px"><button class="btn primary" data-action="saveSettings">Guardar Ajustes</button><button class="btn danger" data-action="resetDemo">Reset Local</button></div>
+        </div>
+        <div class="panel">
+          <div class="section-title"><div><h2>Health Check</h2><p>Señales para mantener tu CRM limpio.</p></div></div>
+          <div class="channels" id="healthCheck"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="view-marketing">
+      <div class="panel">
+        <div class="section-title">
+          <div>
+            <h2>Centro de Marketing de Auriculoterapia</h2>
+            <p>Ideas automáticas para Instagram, WhatsApp y contenido educativo.</p>
+          </div>
+        </div>
+        <div id="marketingIdeas">
+          <h3>Ideas de Reels</h3>
+          <ul>
+            <li>3 puntos auriculares para reducir ansiedad.</li>
+            <li>Mitos y realidades de la auriculoterapia.</li>
+            <li>¿Qué se siente durante una sesión?</li>
+            <li>Auriculoterapia y control del apetito.</li>
+          </ul>
+
+          <h3>Mensajes para WhatsApp</h3>
+          <ul>
+            <li>¡Hola! Gracias por tu interés. ¿Te gustaría una valoración inicial sobre auriculoterapia?</li>
+            <li>Tenemos espacios disponibles esta semana para sesiones de auriculoterapia.</li>
+          </ul>
+
+          <h3>Calendario de contenido mensual</h3>
+          <ul>
+            <li>Semana 1: Beneficios.</li>
+            <li>Semana 2: Casos de éxito.</li>
+            <li>Semana 3: Mitos y evidencia.</li>
+            <li>Semana 4: Preguntas frecuentes.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
+<aside class="drawer" id="leadDrawer">
+  <div class="section-title"><div><h2 id="drawerTitle">Nuevo Lead</h2><p>Registra un paciente potencial o edita su información.</p></div><button class="btn ghost" data-action="closeLeadDrawer">×</button></div>
+  <input type="hidden" id="leadId"/>
+  <div class="form-grid">
+    <div class="field"><label>Nombre</label><input id="leadName" placeholder="Nombre del paciente"/></div>
+    <div class="field"><label>Teléfono / WhatsApp</label><input id="leadPhone" placeholder="+506..."/></div>
+    <div class="field"><label>Origen</label><select id="leadSource"></select></div>
+    <div class="field"><label>Interés principal</label><select id="leadInterest"></select></div>
+    <div class="field"><label>Estado CRM</label><select id="leadStatus"></select></div>
+    <div class="field"><label>Estado del plan</label><select id="leadPlan"><option>Pendiente</option><option>Plan enviado</option><option>En revisión</option><option>Completado</option></select></div>
+    <div class="field" style="grid-column:1/-1"><label>Notas / Diagnóstico</label><textarea id="leadNotes" placeholder="Objetivo nutricional, diagnóstico, alergias, seguimiento..."></textarea></div>
+    <div class="field"><label>Fecha de cita</label><input type="date" id="leadApptDate"/></div>
+    <div class="field"><label>Hora de cita</label><input type="time" id="leadApptTime"/></div>
+  </div>
+  <div class="actions" style="margin-top:14px"><button class="btn primary" data-action="saveLead">Guardar Lead</button><button class="btn" data-action="clearLeadForm">Limpiar</button></div>
+</aside>
+
+<div class="command-backdrop" id="commandBackdrop"></div>
+<div class="command" id="commandBar">
+  <input id="commandInput" placeholder="Buscar o ejecutar acción...  Ej: nuevo lead, agenda, exportar"/>
+  <div class="command-results" id="commandResults"></div>
+</div>
+
+<div class="mascot" id="mascot">
+  <div class="mascot-bubble" id="mascotBubble">
+    <div class="mascot-title">Gigi Nutri <button class="btn small ghost" data-action="minimizeMascot">×</button></div>
+    <div class="mascot-msg" id="mascotMsg">Hola, soy Gigi. Te ayudo a ordenar leads, citas y seguimiento nutricional.</div>
+    <div class="mascot-actions">
+      <button data-mascot="newLead">Nuevo lead</button><button data-mascot="today">Agenda hoy</button>
+      <button data-mascot="next">Siguiente lead</button><button data-mascot="report">Reporte</button>
+      <button data-mascot="marketing">Marketing</button><button data-mascot="contenido">Contenido</button>
+      <button data-mascot="auriculo">Auriculoterapia</button><button data-mascot="focus">Focus</button>
+    </div>
+  </div>
+  <div class="mascot-char">
+    <svg viewBox="0 0 130 180" aria-hidden="true">
+      <defs>
+        <linearGradient id="giraffeBody" x1="0" x2="1" y1="0" y2="1">
+          <stop offset="0" stop-color="#f3cf79"/><stop offset="1" stop-color="#c99443"/>
+        </linearGradient>
+        <linearGradient id="coat" x1="0" x2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#e9efe7"/></linearGradient>
+      </defs>
+      <ellipse cx="66" cy="164" rx="34" ry="8" fill="rgba(0,0,0,.18)"/>
+      <path d="M52 75 C49 95 47 121 45 151 L86 151 C83 119 81 92 77 75Z" fill="url(#giraffeBody)"/>
+      <path d="M48 98 L88 98 L96 153 L39 153Z" fill="url(#coat)" stroke="#d6dfd2" stroke-width="2"/>
+      <path d="M62 101 L62 151 M75 101 L75 151" stroke="#d2dad0" stroke-width="2"/>
+      <circle cx="56" cy="123" r="3" fill="#9aaa88"/><circle cx="76" cy="123" r="3" fill="#9aaa88"/>
+      <path d="M51 73 C39 66 37 45 50 34 C60 24 82 24 94 37 C108 53 97 79 77 82 C68 84 58 80 51 73Z" fill="url(#giraffeBody)" stroke="#9b7439" stroke-width="2"/>
+      <path d="M89 51 C103 48 113 53 115 64 C104 68 94 64 89 57Z" fill="#d7a553" stroke="#9b7439" stroke-width="2"/>
+      <path d="M51 47 C38 43 30 48 28 58 C39 63 49 59 54 52Z" fill="#d7a553" stroke="#9b7439" stroke-width="2"/>
+      <path d="M56 31 L52 16 M82 31 L88 15" stroke="#9b7439" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="51" cy="14" r="6" fill="#c99443" stroke="#9b7439" stroke-width="2"/><circle cx="90" cy="13" r="6" fill="#c99443" stroke="#9b7439" stroke-width="2"/>
+      <ellipse cx="60" cy="54" rx="5" ry="6" fill="#2c2b26"/><ellipse cx="83" cy="54" rx="5" ry="6" fill="#2c2b26"/>
+      <circle cx="62" cy="52" r="1.5" fill="#fff"/><circle cx="85" cy="52" r="1.5" fill="#fff"/>
+      <path d="M61 72 C67 77 77 77 84 70" stroke="#6d4c2f" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <circle cx="72" cy="63" r="4" fill="#9b7439"/>
+      <circle cx="43" cy="41" r="5" fill="#9b7439" opacity=".65"/><circle cx="77" cy="35" r="4" fill="#9b7439" opacity=".55"/><circle cx="91" cy="72" r="5" fill="#9b7439" opacity=".45"/>
+      <path d="M38 118 C24 125 20 139 29 146 C35 151 43 144 47 132" stroke="#f3cf79" stroke-width="8" fill="none" stroke-linecap="round"/>
+      <path d="M93 118 C108 126 110 141 101 148 C95 153 88 145 84 132" stroke="#f3cf79" stroke-width="8" fill="none" stroke-linecap="round"/>
+      <circle cx="108" cy="147" r="9" fill="#e86b5e"/><path d="M108 137 C110 130 116 130 119 132" stroke="#6f8c62" stroke-width="3" fill="none"/>
+      <path d="M50 154 L46 174 M83 154 L87 174" stroke="#7d5b34" stroke-width="8" stroke-linecap="round"/>
+    </svg>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const LS_KEY = "nutrizen_allison_v1";
+const SOURCES = ["Instagram","WhatsApp","Referido","Facebook","Web","Otro"];
+const STATUSES = ["Nuevo","Contactado","Cita Agendada","Paciente Activo","Seguimiento","Perdido"];
+const INTERESTS = ["Pérdida de peso","Nutrición clínica","Plan deportivo","Bienestar hormonal","Educación alimentaria","Control metabólico","Otro"];
+const PLAN_STATUSES = ["Pendiente","Plan enviado","En revisión","Completado"];
+const MARKETING_TIPS = [
+  "Crea casos de éxito anónimos mostrando resultados de auriculoterapia.",
+  "Publica antes y después de síntomas reportados por pacientes con autorización.",
+  "Ofrece una valoración inicial gratuita de 10 minutos por WhatsApp.",
+  "Explica el respaldo científico de la auriculoterapia en videos cortos."
+];
+const CONTENT_IDEAS = [
+  "¿Qué puntos auriculares ayudan con el estrés?",
+  "Mitos y realidades de la auriculoterapia.",
+  "Beneficios de la auriculoterapia para control de ansiedad.",
+  "Cómo complementar nutrición y auriculoterapia."
+];
+const AURICULO_TIPS = [
+  "Documenta siempre los puntos utilizados y la evolución del paciente.",
+  "Evalúa síntomas antes y después de cada sesión.",
+  "Personaliza el protocolo según el motivo de consulta.",
+  "Combina educación alimentaria con auriculoterapia para mejores resultados."
+];
+
+function todayKey(d=new Date()){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}
+function dateLabel(key){const [y,m,d]=key.split("-").map(Number);return new Date(y,m-1,d).toLocaleDateString("es-CR",{weekday:"short",day:"numeric",month:"short"})}
+function uid(){return Math.random().toString(36).slice(2,10)+Date.now().toString(36)}
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
+function pct(n){return `${Number(n||0).toFixed(1)}%`}
+function monthKey(d=new Date()){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`}
+
+const DEFAULT = {
+  followers:0, followerGoal:15, postGoal:7, posts:[],
+  selectedDate: todayKey(new Date()), calendarAnchor: todayKey(new Date()),
+  theme:"sage", motion:"smooth",
+  settings:{clinicName:"Clínica & Bienestar Integral", specialty:"Nutrición y Auriculoterapia"},
+  availability:{},
+  leads:[
+    {id:uid(),createdAt:todayKey(),name:"María Fernanda Soto",phone:"+506 8888-1010",source:"Instagram",interest:"Pérdida de peso",status:"Nuevo",plan:"Pendiente",notes:"Quiere iniciar plan mensual. Prefiere contacto por WhatsApp.",appointmentDate:"",appointmentTime:""},
+    {id:uid(),createdAt:todayKey(),name:"Carlos Brenes",phone:"+506 7012-3322",source:"Referido",interest:"Control metabólico",status:"Cita Agendada",plan:"Pendiente",notes:"Revisar glucosa y hábitos de desayuno.",appointmentDate:todayKey(),appointmentTime:"10:00"},
+    {id:uid(),createdAt:todayKey(),name:"Andrea Quesada",phone:"+506 6123-4455",source:"WhatsApp",interest:"Bienestar hormonal",status:"Paciente Activo",plan:"Plan enviado",notes:"Seguimiento en 2 semanas.",appointmentDate:"",appointmentTime:""}
+  ],
+  activity:[]
+};
+let state = load();
+
+function load(){
+  try{return {...structuredClone(DEFAULT), ...(JSON.parse(localStorage.getItem(LS_KEY)||"{}"))}}catch(e){return structuredClone(DEFAULT)}
+}
+function save(){localStorage.setItem(LS_KEY,JSON.stringify(state))}
+function logActivity(type,msg){state.activity.unshift({id:uid(),ts:new Date().toISOString(),date:todayKey(),type,msg});state.activity=state.activity.slice(0,80);save()}
+
+function leads(){return state.leads||[]}
+function activePatients(){return leads().filter(l=>["Paciente Activo"].includes(l.status))}
+function convertedLeads(){return leads().filter(l=>["Cita Agendada","Paciente Activo"].includes(l.status))}
+function monthPosts(){const mk=monthKey(new Date());return (state.posts||[]).filter(p=>String(p.date).startsWith(mk))}
+function appointmentsForDate(key){return leads().filter(l=>l.appointmentDate===key && l.appointmentTime)}
+function slotsForDate(key){return state.availability[key]||[]}
+function availableSlotsForDate(key){const booked=new Set(appointmentsForDate(key).map(a=>a.appointmentTime));return slotsForDate(key).filter(s=>!booked.has(s))}
+function conversionRate(){return leads().length ? convertedLeads().length/leads().length*100 : 0}
+
+function renderAll(){
+  document.body.dataset.theme=state.theme||"sage";
+  document.body.dataset.motion=state.motion||"smooth";
+  document.getElementById("themeSelect").value=state.theme||"sage";
+  document.getElementById("motionSelect").value=state.motion||"smooth";
+  renderHero(); renderMetrics(); renderCalendar(); renderChannels(); renderTasks(); renderLeads(); renderReports(); renderHealth(); populateControls();
+}
+function renderHero(){
+  document.getElementById("heroConversion").textContent=pct(conversionRate());
+  document.getElementById("heroPatients").textContent=activePatients().length;
+}
+function renderMetrics(){
+  const fPct=Math.min(100,state.followerGoal? state.followers/state.followerGoal*100:0);
+  document.getElementById("followersRing").style.setProperty("--p",fPct);
+  document.getElementById("followersValue").textContent=state.followers;
+  document.getElementById("followersMeta").textContent=`${fPct.toFixed(0)}% Meta`;
+  document.getElementById("followersCurrent").textContent=state.followers;
+  document.getElementById("followersGoal").textContent=state.followerGoal;
+  const p=monthPosts().length, pg=state.postGoal||7, pp=Math.min(100,p/pg*100);
+  document.getElementById("postsProgress").style.width=`${pp}%`;
+  document.getElementById("postsCountLabel").textContent=`${p} publicados`;
+  document.getElementById("postsGoalLabel").textContent=`Meta: ${pg}`;
+  document.getElementById("postsCurrent").textContent=p;
+  document.getElementById("postsGoal").textContent=pg;
+}
+function renderChannels(){
+  const total=leads().length||1;
+  const rows=SOURCES.map(s=>{
+    const n=leads().filter(l=>l.source===s).length;
+    return `<div class="channel-row"><div class="channel-name">${s}</div><div class="progress"><span style="width:${n/total*100}%"></span></div><div class="channel-val">${n} (${Math.round(n/total*100)}%)</div></div>`;
+  }).join("");
+  document.getElementById("channelStats").innerHTML=rows || `<div class="empty">Sin leads todavía.</div>`;
+}
+function renderTasks(){
+  const pending=leads().filter(l=>["Nuevo","Contactado","Seguimiento"].includes(l.status)).slice(0,6);
+  document.getElementById("taskList").innerHTML=pending.map(l=>`
+    <div class="list-task channel-row" style="grid-template-columns:1fr auto auto">
+      <div><strong>${esc(l.name)}</strong><div class="hint">${esc(l.interest)} · ${esc(l.source)}</div></div>
+      <span class="pill ${statusClass(l.status)}">${esc(l.status)}</span>
+      <button class="btn small" data-action="editLead" data-id="${l.id}">Abrir</button>
+    </div>`).join("") || `<div class="empty">No hay tareas pendientes.</div>`;
+}
+function statusClass(s){return s==="Paciente Activo"?"green":s==="Cita Agendada"?"blue":s==="Perdido"?"pink":s==="Seguimiento"?"gold":"green"}
+
+function renderCalendar(){
+  const anchor=new Date(state.calendarAnchor+"T12:00:00");
+  const first=new Date(anchor.getFullYear(),anchor.getMonth(),1);
+  const start=new Date(first); start.setDate(start.getDate()-first.getDay());
+  const label=anchor.toLocaleDateString("es-CR",{month:"long",year:"numeric"});
+  ["monthLabel","monthLabel2"].forEach(id=>{const el=document.getElementById(id); if(el) el.textContent=label});
+  const cells=["DO","LU","MA","MI","JU","VI","SÁ"].map(d=>`<div class="day-name">${d}</div>`);
+  for(let i=0;i<42;i++){
+    const d=new Date(start); d.setDate(start.getDate()+i);
+    const key=todayKey(d), appts=appointmentsForDate(key), free=availableSlotsForDate(key);
+    cells.push(`<div class="day-cell ${d.getMonth()===anchor.getMonth()?"":"other"} ${key===state.selectedDate?"selected":""}" data-action="selectDay" data-date="${key}">
+      <div class="day-num">${d.getDate()}</div>
+      <div class="day-mini">${appts.length?`🗓 ${appts.length} cita${appts.length>1?"s":""}`:""}</div>
+      <div class="day-mini">${free.length?`🌿 ${free.length} libre${free.length>1?"s":""}`:""}</div>
+    </div>`);
+  }
+  document.getElementById("miniCalendar").innerHTML=cells.join("");
+  document.getElementById("agendaCalendar").innerHTML=cells.join("");
+  renderSelectedDay();
+}
+function renderSelectedDay(){
+  const key=state.selectedDate;
+  const appts=appointmentsForDate(key), free=availableSlotsForDate(key), slots=slotsForDate(key);
+  document.getElementById("selectedDayTitle").textContent=`Día seleccionado: ${dateLabel(key)}`;
+  document.getElementById("selectedDaySummary").innerHTML=free.length?`Horario disponible: ${free.map(s=>`<span class="pill green">${s}</span>`).join(" ")}`:`No hay citas registradas para esta fecha.`;
+  document.getElementById("agendaSelectedTitle").textContent=dateLabel(key);
+  document.getElementById("agendaSelectedHint").textContent=`${free.length} horarios libres · ${appts.length} citas`;
+  document.getElementById("slotList").innerHTML=slots.map(s=>{
+    const booked=appts.find(a=>a.appointmentTime===s);
+    return `<span class="slot ${booked?"booked":""}">${s}${booked?` · ${esc(booked.name)}`:""}</span>`;
+  }).join("") || `<div class="empty">Agrega horarios disponibles para este día.</div>`;
+  document.getElementById("dayAppointments").innerHTML=appts.length? appts.map(a=>`<div class="channel-row" style="grid-template-columns:80px 1fr auto"><strong>${a.appointmentTime}</strong><div>${esc(a.name)}<div class="hint">${esc(a.interest)}</div></div><button class="btn small" data-action="editLead" data-id="${a.id}">Editar</button></div>`).join("") : `<div class="empty">Sin citas para este día.</div>`;
+  populateAppointmentControls();
+}
+function populateControls(){
+  [["leadSource",SOURCES],["leadStatus",STATUSES],["leadInterest",INTERESTS],["filterSource",["",...SOURCES]],["filterSource2",["",...SOURCES]],["filterStatus",["",...STATUSES]],["filterStatus2",["",...STATUSES]]].forEach(([id,arr])=>{
+    const el=document.getElementById(id); if(!el) return;
+    const current=el.value;
+    el.innerHTML=arr.map(v=>`<option value="${esc(v)}">${v|| (id.includes("Source")?"Todos los Orígenes":"Todos los Estados")}</option>`).join("");
+    if([...arr].includes(current)) el.value=current;
+  });
+  document.getElementById("goalFollowers").value=state.followerGoal;
+  document.getElementById("goalPosts").value=state.postGoal;
+  document.getElementById("clinicName").value=state.settings.clinicName||"";
+  document.getElementById("clinicSpecialty").value=state.settings.specialty||"";
+}
+function populateAppointmentControls(){
+  const leadSel=document.getElementById("appointmentLead"), slotSel=document.getElementById("appointmentSlot");
+  if(leadSel) leadSel.innerHTML=leads().map(l=>`<option value="${l.id}">${esc(l.name)} · ${esc(l.status)}</option>`).join("");
+  if(slotSel) slotSel.innerHTML=availableSlotsForDate(state.selectedDate).map(s=>`<option>${s}</option>`).join("") || `<option value="">Sin horarios libres</option>`;
+}
+
+function filteredLeads(which=""){
+  const q=(document.getElementById(`searchLeads${which}`)?.value||"").toLowerCase();
+  const source=document.getElementById(`filterSource${which}`)?.value||"";
+  const status=document.getElementById(`filterStatus${which}`)?.value||"";
+  return leads().filter(l=>{
+    const blob=[l.name,l.phone,l.notes,l.interest,l.source,l.status].join(" ").toLowerCase();
+    return (!q||blob.includes(q)) && (!source||l.source===source) && (!status||l.status===status);
+  });
+}
+function renderLeads(){
+  const shortRows=filteredLeads("").map(leadRow).join("") || `<tr><td colspan="8" class="empty">No hay leads registrados.</td></tr>`;
+  const fullRows=filteredLeads("2").map(leadRowFull).join("") || `<tr><td colspan="9" class="empty">No hay leads registrados.</td></tr>`;
+  document.getElementById("leadRows").innerHTML=shortRows;
+  document.getElementById("leadRowsFull").innerHTML=fullRows;
+}
+function leadRow(l){
+  return `<tr><td>${esc(l.createdAt)}</td><td><strong>${esc(l.name)}</strong><div class="hint">${esc(l.phone)}</div></td><td>${esc(l.source)}</td><td>${esc(l.interest)}</td><td><select class="status-select" data-action="changeStatus" data-id="${l.id}">${STATUSES.map(s=>`<option ${s===l.status?"selected":""}>${s}</option>`).join("")}</select></td><td>${l.appointmentDate?`${dateLabel(l.appointmentDate)} · ${l.appointmentTime}`:"—"}</td><td>${esc(l.notes||"")}</td><td><button class="btn small" data-action="editLead" data-id="${l.id}">Editar</button> <button class="btn danger small" data-action="deleteLead" data-id="${l.id}">Borrar</button></td></tr>`;
+}
+function leadRowFull(l){
+  return `<tr><td>${esc(l.createdAt)}</td><td><strong>${esc(l.name)}</strong></td><td>${esc(l.phone||"—")}</td><td>${esc(l.source)}</td><td>${esc(l.interest)}</td><td><span class="pill ${statusClass(l.status)}">${esc(l.status)}</span></td><td>${esc(l.plan||"Pendiente")}</td><td>${esc(l.notes||"")}</td><td><button class="btn small" data-action="editLead" data-id="${l.id}">Editar</button></td></tr>`;
+}
+function renderReports(){
+  const thisMonth=monthKey(new Date());
+  const apptMonth=leads().filter(l=>String(l.appointmentDate||"").startsWith(thisMonth)).length;
+  const newMonth=leads().filter(l=>String(l.createdAt||"").startsWith(thisMonth)).length;
+  const cards=[
+    ["Leads totales",leads().length,"Base completa"],
+    ["Pacientes activos",activePatients().length,"Estado Paciente Activo"],
+    ["Conversión",pct(conversionRate()),"Citas + pacientes / leads"],
+    ["Citas este mes",apptMonth,"Agenda clínica"],
+    ["Nuevos este mes",newMonth,"Leads registrados"],
+    ["Publicaciones",monthPosts().length,"Contenido mensual"],
+    ["Seguimientos",leads().filter(l=>l.status==="Seguimiento").length,"Requieren contacto"],
+    ["Sin notas",leads().filter(l=>!l.notes).length,"Completar diagnóstico"]
+  ];
+  document.getElementById("reportGrid").innerHTML=cards.map(c=>`<div class="report-card"><div class="k">${c[0]}</div><div class="v">${c[1]}</div><div class="hint">${c[2]}</div></div>`).join("");
+  document.getElementById("recentActivity").innerHTML=(state.activity||[]).slice(0,10).map(a=>`<div class="channel-row" style="grid-template-columns:120px 1fr"><strong>${esc(a.date)}</strong><div>${esc(a.msg)}</div></div>`).join("") || `<div class="empty">Sin actividad registrada.</div>`;
+}
+function renderHealth(){
+  const checks=[
+    ["Leads sin teléfono",leads().filter(l=>!l.phone).length],
+    ["Leads sin notas",leads().filter(l=>!l.notes).length],
+    ["Citas sin horario",leads().filter(l=>l.appointmentDate&&!l.appointmentTime).length],
+    ["Seguimientos pendientes",leads().filter(l=>l.status==="Seguimiento").length],
+    ["Pacientes sin plan enviado",leads().filter(l=>l.status==="Paciente Activo" && l.plan!=="Plan enviado" && l.plan!=="Completado").length]
+  ];
+  document.getElementById("healthCheck").innerHTML=checks.map(([k,v])=>`<div class="channel-row" style="grid-template-columns:1fr auto"><div>${k}</div><span class="pill ${v?"pink":"green"}">${v}</span></div>`).join("");
+}
+
+function showView(view){
+  document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id===`view-${view}`));
+  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.view===view));
+  if(view==="crm") renderLeads();
+  if(view==="agenda") renderCalendar();
+  if(view==="reportes") renderReports();
+  if(view==="ajustes") renderHealth();
+}
+function openLeadDrawer(id=""){
+  document.getElementById("drawerBackdrop").classList.add("show");
+  document.getElementById("leadDrawer").classList.add("show");
+  clearLeadForm();
+  if(id){
+    const l=leads().find(x=>x.id===id); if(!l) return;
+    document.getElementById("drawerTitle").textContent="Editar Lead";
+    document.getElementById("leadId").value=l.id;
+    document.getElementById("leadName").value=l.name||"";
+    document.getElementById("leadPhone").value=l.phone||"";
+    document.getElementById("leadSource").value=l.source||"";
+    document.getElementById("leadInterest").value=l.interest||"";
+    document.getElementById("leadStatus").value=l.status||"";
+    document.getElementById("leadPlan").value=l.plan||"Pendiente";
+    document.getElementById("leadNotes").value=l.notes||"";
+    document.getElementById("leadApptDate").value=l.appointmentDate||"";
+    document.getElementById("leadApptTime").value=l.appointmentTime||"";
+  } else {
+    document.getElementById("drawerTitle").textContent="Nuevo Lead";
+    setTimeout(()=>document.getElementById("leadName").focus(),80);
+  }
+}
+function closeLeadDrawer(){document.getElementById("drawerBackdrop").classList.remove("show");document.getElementById("leadDrawer").classList.remove("show")}
+function clearLeadForm(){
+  ["leadId","leadName","leadPhone","leadNotes","leadApptDate","leadApptTime"].forEach(id=>document.getElementById(id).value="");
+  document.getElementById("leadSource").value="Instagram"; document.getElementById("leadInterest").value="Pérdida de peso"; document.getElementById("leadStatus").value="Nuevo"; document.getElementById("leadPlan").value="Pendiente";
+}
+function saveLead(){
+  const id=document.getElementById("leadId").value||uid();
+  const data={id,createdAt:leads().find(l=>l.id===id)?.createdAt||todayKey(),name:document.getElementById("leadName").value.trim()||"Sin nombre",phone:document.getElementById("leadPhone").value.trim(),source:document.getElementById("leadSource").value,interest:document.getElementById("leadInterest").value,status:document.getElementById("leadStatus").value,plan:document.getElementById("leadPlan").value,notes:document.getElementById("leadNotes").value.trim(),appointmentDate:document.getElementById("leadApptDate").value,appointmentTime:document.getElementById("leadApptTime").value};
+  const idx=state.leads.findIndex(l=>l.id===id);
+  if(idx>=0) state.leads[idx]=data; else state.leads.unshift(data);
+  logActivity("lead",`${idx>=0?"Actualizado":"Nuevo lead"}: ${data.name}`);
+  save(); renderAll(); closeLeadDrawer(); toast("Lead guardado");
+}
+function deleteLead(id){if(!confirm("¿Borrar este lead?"))return; const l=leads().find(x=>x.id===id); state.leads=leads().filter(x=>x.id!==id); logActivity("delete",`Lead borrado: ${l?.name||id}`); save(); renderAll(); toast("Lead borrado")}
+function addSlot(){const s=document.getElementById("newSlot").value;if(!s)return; const arr=state.availability[state.selectedDate]||[]; if(!arr.includes(s)) arr.push(s); arr.sort(); state.availability[state.selectedDate]=arr; save(); renderCalendar(); toast("Horario agregado")}
+function bookAppointment(){
+  const lid=document.getElementById("appointmentLead").value, slot=document.getElementById("appointmentSlot").value;
+  if(!lid||!slot)return toast("Selecciona lead y horario disponible");
+  const l=leads().find(x=>x.id===lid); if(!l)return;
+  l.appointmentDate=state.selectedDate; l.appointmentTime=slot; l.status="Cita Agendada";
+  const reason=document.getElementById("appointmentReason").value.trim(); if(reason) l.notes=(l.notes?l.notes+"\n":"")+`Cita: ${reason}`;
+  logActivity("appointment",`Cita agendada: ${l.name} · ${dateLabel(state.selectedDate)} ${slot}`);
+  save(); renderAll(); toast("Cita reservada");
+}
+function addPost(){state.posts.unshift({id:uid(),date:todayKey(),note:"Publicación registrada"}); logActivity("content","Publicación registrada hoy"); save(); renderAll(); toast("Publicación registrada")}
+function undoPost(){state.posts.shift(); save(); renderAll(); toast("Última publicación eliminada")}
+function exportCSV(){
+  const rows=[["Fecha","Nombre","Telefono","Origen","Interes","Estado","Plan","Cita Fecha","Cita Hora","Notas"],...leads().map(l=>[l.createdAt,l.name,l.phone,l.source,l.interest,l.status,l.plan,l.appointmentDate,l.appointmentTime,l.notes])];
+  download(`nutrizen_leads_${todayKey()}.csv`, rows.map(r=>r.map(v=>`"${String(v??"").replace(/"/g,'""')}"`).join(",")).join("\n"),"text/csv");
+}
+function downloadDailyReport(){
+  const txt=[
+    `NutriZen by Allison · Reporte ${todayKey()}`,"",
+    `Leads totales: ${leads().length}`,
+    `Pacientes activos: ${activePatients().length}`,
+    `Conversión: ${pct(conversionRate())}`,
+    `Citas hoy: ${appointmentsForDate(todayKey()).length}`,
+    `Publicaciones este mes: ${monthPosts().length}/${state.postGoal}`,"",
+    "Tareas pendientes:",
+    ...leads().filter(l=>["Nuevo","Contactado","Seguimiento"].includes(l.status)).map(l=>`- ${l.name}: ${l.status} · ${l.interest}`)
+  ].join("\n");
+  download(`nutrizen_reporte_${todayKey()}.txt`,txt,"text/plain");
+}
+function download(name,content,type){
+  const blob=new Blob([content],{type:type+";charset=utf-8"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download=name;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast("Descarga lista");
+}
+function saveSettings(){state.followerGoal=Number(document.getElementById("goalFollowers").value||15);state.postGoal=Number(document.getElementById("goalPosts").value||7);state.settings.clinicName=document.getElementById("clinicName").value;state.settings.specialty=document.getElementById("clinicSpecialty").value;save();renderAll();toast("Ajustes guardados")}
+function toast(msg){const el=document.getElementById("toast");el.textContent=msg;el.classList.remove("show");void el.offsetWidth;el.classList.add("show")}
+function mascotSay(msg){document.getElementById("mascotMsg").textContent=msg;document.getElementById("mascotBubble").classList.add("show")}
+function nextFollowup(){const l=leads().find(x=>["Nuevo","Contactado","Seguimiento"].includes(x.status)); if(l){openLeadDrawer(l.id); mascotSay(`Siguiente seguimiento: ${l.name}`)} else toast("No hay seguimientos pendientes")}
+function openCommand(){document.getElementById("commandBackdrop").classList.add("show");document.getElementById("commandBar").classList.add("show");document.getElementById("commandInput").value="";renderCommand("");setTimeout(()=>document.getElementById("commandInput").focus(),60)}
+function closeCommand(){document.getElementById("commandBackdrop").classList.remove("show");document.getElementById("commandBar").classList.remove("show")}
+function renderCommand(q){
+  q=(q||"").toLowerCase();
+  const cmds=[
+    ["Nuevo lead","Crear nuevo paciente potencial",()=>openLeadDrawer()],
+    ["Agenda","Abrir agenda de citas",()=>showView("agenda")],
+    ["CRM","Abrir tabla de leads",()=>showView("crm")],
+    ["Exportar","Descargar CSV de leads",()=>exportCSV()],
+    ["Reporte diario","Descargar TXT del día",()=>downloadDailyReport()],
+    ["Focus","Activar/desactivar Focus Mode",()=>document.body.classList.toggle("focus-mode")]
+  ].filter(c=>(c[0]+" "+c[1]).toLowerCase().includes(q));
+  document.getElementById("commandResults").innerHTML=cmds.map((c,i)=>`<div class="command-item" data-cmd="${i}"><span>${c[0]}<div class="hint">${c[1]}</div></span><span>↵</span></div>`).join("")||`<div class="empty">Sin resultados.</div>`;
+  window.__cmds=cmds;
+}
+
+document.addEventListener("click",e=>{
+  const nav=e.target.closest("[data-view]"); if(nav){showView(nav.dataset.view);return}
+  const cmd=e.target.closest(".command-item"); if(cmd){window.__cmds[Number(cmd.dataset.cmd)]?.[2](); closeCommand(); return}
+  const m=e.target.closest("[data-mascot]"); if(m){
+    const a=m.dataset.mascot;
+    if(a==="newLead") openLeadDrawer();
+    if(a==="today"){state.selectedDate=todayKey();showView("agenda");renderCalendar();}
+    if(a==="next") nextFollowup();
+    if(a==="report"){showView("reportes");downloadDailyReport();}
+    if(a==="focus"){document.body.classList.toggle("focus-mode");toast("Focus Mode cambiado");}
+    if(a==="marketing") mascotSay(MARKETING_TIPS[Math.floor(Math.random()*MARKETING_TIPS.length)]);
+    if(a==="contenido") mascotSay(CONTENT_IDEAS[Math.floor(Math.random()*CONTENT_IDEAS.length)]);
+    if(a==="auriculo") mascotSay(AURICULO_TIPS[Math.floor(Math.random()*AURICULO_TIPS.length)]);
+    return;
+  }
+  const a=e.target.closest("[data-action]"); if(!a)return;
+  const action=a.dataset.action;
+  if(action==="openLeadDrawer") openLeadDrawer();
+  if(action==="closeLeadDrawer") closeLeadDrawer();
+  if(action==="clearLeadForm") clearLeadForm();
+  if(action==="saveLead") saveLead();
+  if(action==="deleteLead") deleteLead(a.dataset.id);
+  if(action==="editLead") openLeadDrawer(a.dataset.id);
+  if(action==="selectDay"){state.selectedDate=a.dataset.date;save();renderCalendar();}
+  if(action==="prevMonth"){const d=new Date(state.calendarAnchor+"T12:00:00");d.setMonth(d.getMonth()-1);state.calendarAnchor=todayKey(d);renderCalendar();}
+  if(action==="nextMonth"){const d=new Date(state.calendarAnchor+"T12:00:00");d.setMonth(d.getMonth()+1);state.calendarAnchor=todayKey(d);renderCalendar();}
+  if(action==="today"){state.selectedDate=todayKey();state.calendarAnchor=todayKey();renderCalendar();}
+  if(action==="openAgenda") showView("agenda");
+  if(action==="addSlot") addSlot();
+  if(action==="bookAppointment") bookAppointment();
+  if(action==="followersPlus"){state.followers++;save();renderAll()}
+  if(action==="followersMinus"){state.followers=Math.max(0,state.followers-1);save();renderAll()}
+  if(action==="addPost") addPost();
+  if(action==="undoPost") undoPost();
+  if(action==="exportCSV") exportCSV();
+  if(action==="downloadDailyReport") downloadDailyReport();
+  if(action==="saveSettings") saveSettings();
+  if(action==="editGoals") showView("ajustes");
+  if(action==="clearFilters"){["searchLeads2","filterSource2","filterStatus2"].forEach(id=>document.getElementById(id).value="");renderLeads();}
+  if(action==="openCommand") openCommand();
+  if(action==="toggleFocus"){document.body.classList.toggle("focus-mode");toast("Focus Mode cambiado")}
+  if(action==="nextFollowup") nextFollowup();
+  if(action==="minimizeMascot") document.getElementById("mascot").classList.add("minimized");
+  if(action==="resetDemo"){if(confirm("¿Resetear datos locales?")){localStorage.removeItem(LS_KEY);state=structuredClone(DEFAULT);renderAll();toast("Datos reiniciados")}}
+});
+document.addEventListener("change",e=>{
+  if(e.target.matches("[data-action='changeStatus']")){const l=leads().find(x=>x.id===e.target.dataset.id); if(l){l.status=e.target.value;logActivity("status",`${l.name} → ${l.status}`);save();renderAll();}}
+  if(e.target.id==="themeSelect"){state.theme=e.target.value;save();renderAll()}
+  if(e.target.id==="motionSelect"){state.motion=e.target.value;save();renderAll()}
+});
+document.addEventListener("input",e=>{
+  if(["searchLeads","filterSource","filterStatus"].includes(e.target.id)) renderLeads();
+  if(["searchLeads2","filterSource2","filterStatus2"].includes(e.target.id)) renderLeads();
+  if(e.target.id==="commandInput") renderCommand(e.target.value);
+});
+document.addEventListener("keydown",e=>{
+  if(e.key==="/" && !["INPUT","TEXTAREA","SELECT"].includes(document.activeElement.tagName)){e.preventDefault();openCommand();}
+  if(e.key==="Escape"){closeCommand();closeLeadDrawer();document.getElementById("mascotBubble").classList.remove("show")}
+});
+document.getElementById("drawerBackdrop").addEventListener("click",closeLeadDrawer);
+document.getElementById("commandBackdrop").addEventListener("click",closeCommand);
+document.getElementById("mascot").addEventListener("click",e=>{if(e.target.closest("button"))return; const box=document.getElementById("mascot"); if(box.classList.contains("minimized")){box.classList.remove("minimized"); return;} document.getElementById("mascotBubble").classList.toggle("show")});
+
+function init(){
+  if(!state.availability[todayKey()]) state.availability[todayKey()]=["09:00","10:00","11:30","14:00"];
+  populateControls(); renderAll(); mascotSay("Hola, soy Gigi 🦒. Puedes pedirme tips, abrir agenda o crear un lead.");
+}
+init();
+</script>
+</body>
+</html>
