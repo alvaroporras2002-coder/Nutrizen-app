@@ -1,2 +1,0 @@
-# Nutrizen-app
-App NutriZen
